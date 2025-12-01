@@ -1,4 +1,4 @@
-import feedparser
+import requests
 import git
 import os
 import re
@@ -8,59 +8,128 @@ from dateutil import parser
 # 설정
 # ------------------------------
 
-# Velog RSS URL (최근 글 50개 이상 가져오기)
-rss_url = 'https://api.velog.io/rss/@sunmins'
+USERNAME = "sunmins"
+GRAPHQL_URL = "https://v2.velog.io/graphql"
 
 repo_path = '.'
 posts_dir = os.path.join(repo_path, 'velog-posts')
 
 # 백업 폴더 없으면 생성
-if not os.path.exists(posts_dir):
-    os.makedirs(posts_dir)
+os.makedirs(posts_dir, exist_ok=True)
 
 # Git repo 로드
 repo = git.Repo(repo_path)
-feed = feedparser.parse(rss_url)
 
-# 새로 추가되는 파일 목록
-new_files = []
 
-# ------------------------------
-# 모든 글 처리
-# ------------------------------
-for entry in feed.entries:
-    # 날짜 처리
-    try:
-        date_obj = parser.parse(entry.published)
-        date_str = date_obj.strftime('%Y-%m-%d')
-    except AttributeError:
-        date_str = parser.parse(entry.updated).strftime('%Y-%m-%d') if hasattr(entry, 'updated') else 'unknown-date'
+def fetch_all_posts(username: str):
+    """Velog GraphQL Posts 쿼리로 모든 글 메타데이터 가져오기 (페이지네이션)"""
+    cursor = None
+    all_posts = []
 
-    # 제목 안전화
-    safe_title = re.sub(r'[\\/*?:"<>|]', '-', entry.title)
-    file_name = f"{date_str}-{safe_title}.md"
-    file_path = os.path.join(posts_dir, file_name)
+    while True:
+        payload = {
+            "operationName": "Posts",
+            "variables": {
+                "username": username,
+                "cursor": cursor,
+                "limit": 100,
+            },
+            "query": """
+            query Posts($cursor: ID, $username: String, $temp_only: Boolean, $tag: String, $limit: Int) {
+              posts(cursor: $cursor, username: $username, temp_only: $temp_only, tag: $tag, limit: $limit) {
+                id
+                title
+                url_slug
+                released_at
+              }
+            }
+            """,
+        }
 
-    # 이미 파일이 있으면 건너뛰기 (초기 백업용이니까)
-    if os.path.exists(file_path):
-        print(f"[SKIP] 이미 존재하는 파일입니다: {file_name}")
-        continue
+        res = requests.post(GRAPHQL_URL, json=payload)
+        res.raise_for_status()
+        data = res.json()["data"]["posts"]
 
-    # 파일이 없으면 새로 생성
-    with open(file_path, 'w', encoding='utf-8') as file:
-        file.write(entry.description)
+        if not data:
+            break
 
-    repo.git.add(file_path)
-    new_files.append(file_path)
-    print(f"[ADD] 새 파일 추가: {file_name}")
+        all_posts.extend(data)
+        cursor = data[-1]["id"]  # 마지막 글 id를 다음 요청의 cursor로 사용
 
-# ------------------------------
-# 커밋 & 푸시
-# ------------------------------
-if new_files:
-    # 새 파일이 하나 이상 있을 때만 커밋/푸시
-    repo.git.commit('-m', 'Initial backup of blog posts')
-    repo.git.push()
-    print(f"[DONE] {len(new_files)}개 글을 백업하고 푸시했습니다.")
-else:
-    print("[DONE] 새로 백업할 글이 없어 커밋/푸시를 생략합니다.")
+    return all_posts
+
+
+def fetch_post_body(username: str, url_slug: str):
+    """단일 글의 본문(body) 가져오기"""
+    payload = {
+        "operationName": "ReadPost",
+        "variables": {"username": username, "url_slug": url_slug},
+        "query": """
+        query ReadPost($username: String, $url_slug: String) {
+          post(username: $username, url_slug: $url_slug) {
+            title
+            body
+            released_at
+          }
+        }
+        """,
+    }
+
+    res = requests.post(GRAPHQL_URL, json=payload)
+    res.raise_for_status()
+    post = res.json()["data"]["post"]
+    return post
+
+
+def safe_filename(date_str: str, title: str) -> str:
+    safe_title = re.sub(r'[\\/*?:"<>|]', '-', title)
+    return f"{date_str}-{safe_title}.md"
+
+
+def main():
+    posts_meta = fetch_all_posts(USERNAME)
+    print(f"총 {len(posts_meta)}개 글 메타데이터 조회 완료")
+
+    new_files = []
+
+    for meta in posts_meta:
+        # 날짜 처리
+        released_at = meta.get("released_at")
+        if released_at:
+            date_obj = parser.parse(released_at)
+            date_str = date_obj.strftime('%Y-%m-%d')
+        else:
+            date_str = 'unknown-date'
+
+        # 파일명
+        file_name = safe_filename(date_str, meta["title"])
+        file_path = os.path.join(posts_dir, file_name)
+
+        # 이미 있으면 건너뜀 (초기 백업용)
+        if os.path.exists(file_path):
+            print(f"[SKIP] 이미 존재: {file_name}")
+            continue
+
+        # 본문 가져오기
+        post_detail = fetch_post_body(USERNAME, meta["url_slug"])
+        body = post_detail["body"]
+
+        # 파일 생성
+        with open(file_path, 'w', encoding='utf-8') as f:
+            f.write(body)
+
+        repo.git.add(file_path)
+        new_files.append(file_path)
+        print(f"[ADD] 새 파일 추가: {file_name}")
+
+    # 커밋 & 푸시
+    if new_files:
+        repo.git.commit('-m', 'Full backup of all Velog posts via GraphQL')
+        repo.git.push()
+        print(f"[DONE] {len(new_files)}개 글을 백업하고 푸시했습니다.")
+    else:
+        print("[DONE] 새로 백업할 글이 없어 커밋/푸시를 생략합니다.")
+
+
+if __name__ == "__main__":
+    main()
