@@ -1,0 +1,42 @@
+name: Backup Blog Posts
+
+# 수동 실행만 가능 (한 번만 실행)
+on:
+  workflow_dispatch:
+
+jobs:
+  backup_blog:
+    runs-on: ubuntu-latest
+
+    steps:
+    # repo checkout
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # 시간대 설정 (옵션)
+    - name: Set time zone
+      run: |
+        sudo ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+        echo "Asia/Seoul" | sudo tee /etc/timezone
+        date
+
+    # GitHub Push 설정
+    - name: Configure Git
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+    # Python 설치
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    # Dependencies 설치
+    - name: Install dependencies
+      run: |
+        pip install feedparser gitpython python-dateutil
+
+    # 초기 백업 실행
+    - name: Run Backup Script
+      run: python scripts/backup_all_blog.py
