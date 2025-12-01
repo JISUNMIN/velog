@@ -36,7 +36,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install feedparser gitpython
+        pip install feedparser gitpython python-dateutil
 
     - name: Run script
       run: python scripts/update_blog.py
