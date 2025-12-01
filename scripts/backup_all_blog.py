@@ -13,11 +13,17 @@ rss_url = 'https://api.velog.io/rss/@sunmins'
 
 repo_path = '.'
 posts_dir = os.path.join(repo_path, 'velog-posts')
+
+# 백업 폴더 없으면 생성
 if not os.path.exists(posts_dir):
     os.makedirs(posts_dir)
 
+# Git repo 로드
 repo = git.Repo(repo_path)
 feed = feedparser.parse(rss_url)
+
+# 새로 추가되는 파일 목록
+new_files = []
 
 # ------------------------------
 # 모든 글 처리
@@ -35,13 +41,26 @@ for entry in feed.entries:
     file_name = f"{date_str}-{safe_title}.md"
     file_path = os.path.join(posts_dir, file_name)
 
-    # 파일이 없으면 생성, 기존 내용과 달라도 덮어쓰기
+    # 이미 파일이 있으면 건너뛰기 (초기 백업용이니까)
+    if os.path.exists(file_path):
+        print(f"[SKIP] 이미 존재하는 파일입니다: {file_name}")
+        continue
+
+    # 파일이 없으면 새로 생성
     with open(file_path, 'w', encoding='utf-8') as file:
         file.write(entry.description)
 
-    # 커밋 메시지: 새 글이면 Add
     repo.git.add(file_path)
-    repo.git.commit('-m', f'Add post: {entry.title}')
+    new_files.append(file_path)
+    print(f"[ADD] 새 파일 추가: {file_name}")
 
-# push
-repo.git.push()
+# ------------------------------
+# 커밋 & 푸시
+# ------------------------------
+if new_files:
+    # 새 파일이 하나 이상 있을 때만 커밋/푸시
+    repo.git.commit('-m', 'Initial backup of blog posts')
+    repo.git.push()
+    print(f"[DONE] {len(new_files)}개 글을 백업하고 푸시했습니다.")
+else:
+    print("[DONE] 새로 백업할 글이 없어 커밋/푸시를 생략합니다.")
