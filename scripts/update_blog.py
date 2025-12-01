@@ -3,6 +3,7 @@ import git
 import os
 from dateutil import parser  # 날짜 문자열을 안전하게 파싱
 import re  # 파일명에서 특수문자 처리
+import urllib.parse  # 🔹 GitHub 링크용으로 파일명 인코딩
 
 # ------------------------------
 # 설정
@@ -52,13 +53,17 @@ for entry in feed.entries:
     file_name = f"{date_str}-{safe_title}.md"
     file_path = os.path.join(posts_dir, file_name)
 
+    # 🔹 GitHub에서 클릭 가능한 URL용으로 파일명 인코딩
+    encoded_file_name = urllib.parse.quote(file_name)
+    md_path = f"velog-posts/{encoded_file_name}"
+
     # README용 데이터 저장 (Velog 링크 + md 경로 둘 다)
     entries_for_readme.append({
         "date_obj": date_obj,
         "date_str": date_str,
         "title": entry.title,
         "velog_link": getattr(entry, "link", None),
-        "md_path": f"velog-posts/{file_name}",
+        "md_path": md_path,
     })
 
     # --- 파일 존재 여부 및 내용 변경 체크 ---
