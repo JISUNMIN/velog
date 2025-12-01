@@ -32,44 +32,40 @@ feed = feedparser.parse(rss_url)
 # ------------------------------
 for entry in feed.entries:
     # --- 날짜 처리 ---
-    # entry.published에서 날짜 파싱, 시간대(GMT 등) 자동 처리
     try:
         date_obj = parser.parse(entry.published)
-        date_str = date_obj.strftime('%Y-%m-%d')  # YYYY-MM-DD 형식
+        date_str = date_obj.strftime('%Y-%m-%d')
     except AttributeError:
-        # published 속성이 없으면 updated 속성 사용, 없으면 'unknown-date'
         date_str = parser.parse(entry.updated).strftime('%Y-%m-%d') if hasattr(entry, 'updated') else 'unknown-date'
 
-    # --- 파일명 처리 ---
-    # 제목에서 파일명으로 쓸 수 없는 특수문자 제거
+    # --- 파일명 ---
     safe_title = re.sub(r'[\\/*?:"<>|]', '-', entry.title)
-    # 날짜-제목.md 형태로 파일명 생성
     file_name = f"{date_str}-{safe_title}.md"
     file_path = os.path.join(posts_dir, file_name)
 
-    # --- 파일 존재 여부 및 내용 변경 체크 ---
+    # --- 파일 존재 체크 ---
+    file_existed = os.path.exists(file_path)
+
+    # --- 파일 쓰기 여부 결정 ---
     write_file = False
-    if not os.path.exists(file_path):
-        # 파일이 없으면 새로 생성
+    if not file_existed:
         write_file = True
     else:
-        # 파일이 존재하면 기존 내용과 비교
         with open(file_path, 'r', encoding='utf-8') as f:
             existing_content = f.read()
         if existing_content != entry.description:
-            # 내용이 다르면 덮어쓰기
             write_file = True
 
-    # --- 파일 작성 및 Git 커밋 ---
+    # --- 파일 쓰기 & 커밋 ---
     if write_file:
-        # 파일 쓰기
-        with open(file_path, 'w', encoding='utf-8') as file:
-            file.write(entry.description)
+        with open(file_path, 'w', encoding='utf-8') as f:
+            f.write(entry.description)
 
-        # 커밋 메시지: 새 글이면 Add, 기존 글 내용 변경이면 Update
-        commit_msg = 'Add post' if not os.path.exists(file_path) else 'Update post'
+        commit_msg = 'Add post' if not file_existed else 'Update post'
+
         repo.git.add(file_path)
         repo.git.commit('-m', f'{commit_msg}: {entry.title}')
+        print(f"{commit_msg}: {file_name}")
 
-# --- 변경 사항 GitHub에 push ---
+# --- 변경 사항 push ---
 repo.git.push()
