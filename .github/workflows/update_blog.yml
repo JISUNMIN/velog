@@ -2,12 +2,12 @@ name: Update Blog Posts
   
 
 on:
-  # push:
-  #     branches:
-  #       - main # 또는 워크플로우를 트리거하고 싶은 브랜치 이름
+  push:
+      branches:
+        - main # 또는 워크플로우를 트리거하고 싶은 브랜치 이름
   workflow_dispatch:	# 수동 실행 트리거 추가
-  # schedule:
-  #   - cron: '0 0 * * *' # 매일 자정에 실행
+  schedule:
+    - cron: '0 0 * * *' # 매일 자정에 실행
 
 jobs:
   update_blog:
