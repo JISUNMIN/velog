@@ -117,7 +117,7 @@ for e in latest_entries:
     md_path = e["md_path"]
 
     if velog_link:
-        lines.append(f"- {date_str} [{title}]({velog_link}) → [GitHub]({md_path})")
+        lines.append(f"- {date_str} [{title}]({velog_link}) → [GitHub 파일]({md_path})")
     else:
         # 링크가 없으면 md만
         lines.append(f"- {date_str} {title} ([md]({md_path}))")
