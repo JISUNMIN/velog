@@ -35,7 +35,7 @@ jobs:
     # Dependencies 설치
     - name: Install dependencies
       run: |
-        pip install feedparser gitpython python-dateutil
+        pip install feedparser gitpython python-dateutil requests
 
     # 초기 백업 실행
     - name: Run Backup Script
