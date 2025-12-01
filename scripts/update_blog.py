@@ -46,43 +46,38 @@ for entry in feed.entries:
             date_obj = None
             date_str = 'unknown-date'
 
-    # README용 데이터 저장
+    # --- 파일명 처리 ---
+    # 제목에서 파일명으로 쓸 수 없는 특수문자 제거
+    safe_title = re.sub(r'[\\/*?:"<>|]', '-', entry.title)
+    file_name = f"{date_str}-{safe_title}.md"
+    file_path = os.path.join(posts_dir, file_name)
+
+    # README용 데이터 저장 (Velog 링크 + md 경로 둘 다)
     entries_for_readme.append({
         "date_obj": date_obj,
         "date_str": date_str,
         "title": entry.title,
-        "link": getattr(entry, "link", None),
+        "velog_link": getattr(entry, "link", None),
+        "md_path": f"velog-posts/{file_name}",
     })
-
-    # --- 파일명 처리 ---
-    # 제목에서 파일명으로 쓸 수 없는 특수문자 제거
-    safe_title = re.sub(r'[\\/*?:"<>|]', '-', entry.title)
-    # 날짜-제목.md 형태로 파일명 생성
-    file_name = f"{date_str}-{safe_title}.md"
-    file_path = os.path.join(posts_dir, file_name)
 
     # --- 파일 존재 여부 및 내용 변경 체크 ---
     file_existed = os.path.exists(file_path)
     write_file = False
 
     if not file_existed:
-        # 파일이 없으면 새로 생성
         write_file = True
     else:
-        # 파일이 존재하면 기존 내용과 비교
         with open(file_path, 'r', encoding='utf-8') as f:
             existing_content = f.read()
         if existing_content != entry.description:
-            # 내용이 다르면 덮어쓰기
             write_file = True
 
     # --- 파일 작성 및 Git 커밋 ---
     if write_file:
-        # 파일 쓰기
         with open(file_path, 'w', encoding='utf-8') as file:
             file.write(entry.description)
 
-        # 커밋 메시지: 새 글이면 Add, 기존 글 내용 변경이면 Update
         commit_msg = 'Add post' if not file_existed else 'Update post'
         repo.git.add(file_path)
         repo.git.commit('-m', f'{commit_msg}: {entry.title}')
@@ -98,26 +93,29 @@ if os.path.exists(readme_path):
     with open(readme_path, 'r', encoding='utf-8') as f:
         old_readme_content = f.read()
 
-# 최신 글 정렬 (날짜 기준 내림차순)
+# 날짜 있는 글만 대상으로 정렬
 valid_entries = [e for e in entries_for_readme if e["date_obj"] is not None]
 sorted_entries = sorted(valid_entries, key=lambda e: e["date_obj"], reverse=True)
 
-# 최근 N개만 사용 (원하면 숫자 바꿔도 됨)
+# 최근 N개만 사용
 N = 5
 latest_entries = sorted_entries[:N]
 
-# 섹션용 마크다운 생성
+# 섹션용 마크다운 생성 (Velog + md 하이브리드 링크)
 lines = []
 lines.append("## Latest Velog Posts")
 lines.append("")
 for e in latest_entries:
     date_str = e["date_str"]
     title = e["title"]
-    link = e["link"]
-    if link:
-        lines.append(f"- {date_str} [{title}]({link})")
+    velog_link = e["velog_link"]
+    md_path = e["md_path"]
+
+    if velog_link:
+        lines.append(f"- {date_str} [{title}]({velog_link}) ([md]({md_path}))")
     else:
-        lines.append(f"- {date_str} {title}")
+        # 링크가 없으면 md만
+        lines.append(f"- {date_str} {title} ([md]({md_path}))")
 lines.append("")
 
 new_section = "\n".join(lines)
