@@ -124,9 +124,13 @@ def main():
 
     # 커밋 & 푸시
     if new_files:
-        repo.git.commit('-m', 'Full backup of all Velog posts via GraphQL')
+        today = datetime.now().strftime('%Y-%m-%d')
+        count = len(new_files)
+        commit_message = f"Backup done: {today} ({count} posts added)"
+    
+        repo.git.commit('-m', commit_message)
         repo.git.push()
-        print(f"[DONE] {len(new_files)}개 글을 백업하고 푸시했습니다.")
+        print(f"[DONE] {count}개 글을 백업하고 푸시했습니다.")
     else:
         print("[DONE] 새로 백업할 글이 없어 커밋/푸시를 생략합니다.")
 
