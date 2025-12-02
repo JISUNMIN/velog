@@ -7,7 +7,7 @@
 </blockquote>
 <p>여기에 더해 <strong>컴파일 타임(Compile Time)</strong>이라는 용어도 있지만,<br />FE/Node 환경에서는 컴파일(트랜스파일) 과정이 빌드 과정 전체에 포함되므로<br />실무에서는 <strong>‘컴파일 타임’이라는 용어를 빌드 타임과 구분하지 않고</strong><br />주로 “빌드 타임 오류”, “빌드 에러”처럼 표현하는 경우가 많습니다</p>
 <hr />
-<h2 id="💡-실행-순서">💡 실행 순서</h2>
+<h2 id="💡-개념과-실행-순서">💡 개념과 실행 순서</h2>
 <p>프로그램이 실행되기 위해서는<br /><strong>코드를 준비(컴파일) → 실행 가능한 형태로 만들고(빌드) → 실제로 실행(런타임)</strong> 하는 과정이 필요합니다.</p>
 <p>즉, 정확한 순서는 다음과 같습니다.</p>
 <h3 id="1-컴파일compile"><strong>1. 컴파일(Compile)</strong></h3>
@@ -82,54 +82,6 @@
 </ul>
 <p>사용자가 브라우저에서 앱을 열고 버튼 클릭
 ➡ 런타임</p>
-<hr />
-<h2 id="💡-핵심-용어와-실행-순서">💡 핵심 용어와 실행 순서</h2>
-<p>프로그램이 실행되기 위해서는<br /><strong>코드를 준비(컴파일) → 실행 가능한 형태로 만들고(빌드) → 실제로 실행(런타임)</strong> 하는 과정이 필요합니다.</p>
-<p>즉, 정확한 순서는 다음과 같습니다.</p>
-<hr />
-<h3 id="1-컴파일compile-1">1. 컴파일(Compile)</h3>
-<p>코드를 기계가 이해할 수 있도록 <strong>변환하는 단계</strong></p>
-<ul>
-<li>코드 문법 검사  </li>
-<li>타입 검사  </li>
-<li>TS → JS 변환  </li>
-<li>JSX → JS 변환  </li>
-<li>최신 JS → 구버전 JS 변환(Babel)</li>
-</ul>
-<blockquote>
-<p><strong>우리가 쓴 코드 → 실행 가능한 코드로 변환하는 과정</strong><br />단, 이 단계는 “코드만 변환”하며 CSS/이미지/환경변수 처리는 포함되지 않음</p>
-</blockquote>
-<hr />
-<h3 id="2-빌드build-1">2. 빌드(Build)</h3>
-<p>프로그램을 <strong>실행 가능한 완제품으로 조립·포장하는 단계</strong></p>
-<ul>
-<li>JS 파일 번들링  </li>
-<li>Tree-shaking / minify / 난독화  </li>
-<li>CSS·이미지·폰트 등 정적 자원 처리  </li>
-<li>환경변수(.env.production 등) 주입  </li>
-<li>HTML/manifest 등 정적 파일 생성  </li>
-<li>Docker일 경우 이미지 빌드  </li>
-<li>최종적으로 <code>dist/</code>, <code>build/</code> 산출물 생성</li>
-</ul>
-<blockquote>
-<p><strong>컴파일된 코드 + 모든 리소스를 실행 가능한 형태로 완성하는 과정</strong></p>
-</blockquote>
-<hr />
-<h3 id="3-런타임runtime-1">3. 런타임(Runtime)</h3>
-<p>준비된 프로그램이 <strong>실제로 실행되는 시점</strong></p>
-<ul>
-<li>브라우저에서 웹 앱이 동작  </li>
-<li>서버가 API 요청 처리  </li>
-<li>DB와 통신  </li>
-<li>React 컴포넌트 렌더링  </li>
-<li>사용자 입력 이벤트 처리</li>
-</ul>
-<blockquote>
-<p><strong>빌드가 끝난 뒤 실제로 프로그램이 돌아가는 순간</strong></p>
-</blockquote>
-<hr />
-<h3 id="✅-전체-실행-순서-요약">✅ 전체 실행 순서 요약</h3>
-<p><strong><code>컴파일 → 빌드 → 런타임</code></strong><br />항상 이 순서가 맞습니다.</p>
 <hr />
 <h2 id="🤔-왜-fe-개발자들은-이-순서를-헷갈리기-쉬울까">🤔 왜 FE 개발자들은 이 순서를 헷갈리기 쉬울까?</h2>
 <p>프론트엔드/Node 환경에서는 아래 3가지 이유 때문에<br />실제 순서가 잘 체감되지 않습니다.</p>
