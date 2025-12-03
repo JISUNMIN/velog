@@ -8,3 +8,12 @@
 - 2025-12-02 [프론트엔드 로드맵 (Frontend Roadmap)](https://velog.io/@sunmins/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C-%EB%A1%9C%EB%93%9C%EB%A7%B5-Frontend-Roadmap) → [GitHub](velog-posts/2025-12-02-%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C%20%EB%A1%9C%EB%93%9C%EB%A7%B5%20%28Frontend%20Roadmap%29.md)
 
 <!-- VELLOG_RECENT_POSTS:END -->
+
+<!-- VELLOG_POPULAR_POSTS:START -->
+## Popular Velog Posts
+
+- 168 views · [상하좌우 자유로운 DnD를 원한다면? "pangea/dnd" → "dnd-kit" ](https://velog.io/@sunmins/Grid-레이아웃에서-완전한-Drag-Drop을-구현하는-방법-dnd-kit-적용기)
+- 85 views · [✨ React + Tailwind로 구현하는 3D 카드 인터랙션과 빛 반짝임 효과 (포켓몬 카드)](https://velog.io/@sunmins/마우스-움직임에-따라-카드에-3D-회전과-반짝이는-효과-주기-3yhyb3iq)
+- 74 views · [ Vercel Serverless 환경에서 발생한 API Timeout 문제 해결기 - Serverless란?](https://velog.io/@sunmins/Vercel-Serverless-환경에서-발생한-API-Timeout-문제-해결기)
+
+<!-- VELLOG_POPULAR_POSTS:END -->
