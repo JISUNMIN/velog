@@ -1,0 +1,42 @@
+name: Update Popular Velog Posts
+
+on:
+  workflow_dispatch:  # 수동 실행
+
+jobs:
+  update_popular:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set time zone
+      run: |
+        sudo ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+        echo "Asia/Seoul" | sudo tee /etc/timezone
+        date
+
+    - name: Configure Git
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        pip install requests python-dateutil gitpython
+
+    - name: Update Popular Velog Posts
+      env:
+        VELOG_ACCESS_TOKEN: ${{ secrets.VELOG_ACCESS_TOKEN }}
+        VELOG_REFRESH_TOKEN: ${{ secrets.VELOG_REFRESH_TOKEN }}
+      run: python scripts/update_popular_posts.py
+
+    - name: Push changes
+      run: |
+        git push
