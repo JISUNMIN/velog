@@ -15,7 +15,7 @@
 <blockquote>
 <p>자세한 내용은<a href="https://velog.io/@sunmins/%EA%B0%9C%EB%B0%9C-%EC%9A%A9%EC%96%B4-%EC%82%AC%EC%A0%84-%EB%B2%88%EB%93%A4%EB%9F%ACBundler%EB%9E%80-1"> [개발 용어 사전] 번들러(Bundler)란? #1</a> 에서 확인하실수있습니다.</p>
 </blockquote>
-<h2 id="esm과-cjs는-기본적으로-js-만-내보내고-받아올-수-있음">ESM과 CJS는 기본적으로 <code>.js</code> 만 내보내고 받아올 수 있음</h2>
+<h2 id="esm과-cjs는-기본적으로-js-만-내보내고-받아올-수-있다">ESM과 CJS는 기본적으로 <code>.js</code> 만 내보내고 받아올 수 있다.</h2>
 <p>또한 CSS·이미지·JSON·JSX 같은 파일을 <strong>JS 모듈처럼(JS 형태) 사용할 수 있도록 변환하는 역할도 합니다.</strong></p>
 <p>JS 엔진(브라우저/Node)은 원래 다음 확장자만 모듈로 해석합니다:</p>
 <ul>
