@@ -12,8 +12,8 @@
 <!-- VELLOG_POPULAR_POSTS:START -->
 ## Popular Velog Posts
 
-- 175 views · [상하좌우 자유로운 DnD를 원한다면? "pangea/dnd" → "dnd-kit" ](https://velog.io/@sunmins/Grid-레이아웃에서-완전한-Drag-Drop을-구현하는-방법-dnd-kit-적용기)
-- 87 views · [✨ React + Tailwind로 구현하는 3D 카드 인터랙션과 빛 반짝임 효과 (포켓몬 카드)](https://velog.io/@sunmins/마우스-움직임에-따라-카드에-3D-회전과-반짝이는-효과-주기-3yhyb3iq)
-- 77 views · [ Vercel Serverless 환경에서 발생한 API Timeout 문제 해결기 - Serverless란?](https://velog.io/@sunmins/Vercel-Serverless-환경에서-발생한-API-Timeout-문제-해결기)
+- 179 views · [상하좌우 자유로운 DnD를 원한다면? "pangea/dnd" → "dnd-kit" ](https://velog.io/@sunmins/Grid-레이아웃에서-완전한-Drag-Drop을-구현하는-방법-dnd-kit-적용기)
+- 95 views · [✨ React + Tailwind로 구현하는 3D 카드 인터랙션과 빛 반짝임 효과 (포켓몬 카드)](https://velog.io/@sunmins/마우스-움직임에-따라-카드에-3D-회전과-반짝이는-효과-주기-3yhyb3iq)
+- 85 views · [ Vercel Serverless 환경에서 발생한 API Timeout 문제 해결기 - Serverless란?](https://velog.io/@sunmins/Vercel-Serverless-환경에서-발생한-API-Timeout-문제-해결기)
 
 <!-- VELLOG_POPULAR_POSTS:END -->
