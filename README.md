@@ -1,11 +1,11 @@
 <!-- VELLOG_RECENT_POSTS:START -->
 ## Latest Velog Posts
 
+- 2025-12-23 [TIL - React Query `refetch` 와 `invalidate`](https://velog.io/@sunmins/TIL-React-Query-refetch-%EC%99%80-invalidate-h922ocl7) → [GitHub](velog-posts/2025-12-23-TIL%20-%20React%20Query%20%60refetch%60%20%EC%99%80%20%60invalidate%60.md)
 - 2025-12-22 [목차 | React Hook Form, 왜 쓰는 걸까?](https://velog.io/@sunmins/%EB%AA%A9%EC%B0%A8-React-Hook-Form-%EC%99%9C-%EC%93%B0%EB%8A%94-%EA%B1%B8%EA%B9%8C-lhjtcsuk) → [GitHub](velog-posts/2025-12-22-%EB%AA%A9%EC%B0%A8%20-%20React%20Hook%20Form%2C%20%EC%99%9C%20%EC%93%B0%EB%8A%94%20%EA%B1%B8%EA%B9%8C-.md)
 - 2025-12-19 [TIL - React Query `select` 옵션](https://velog.io/@sunmins/TIL-React-Query-select-%EC%98%B5%EC%85%98) → [GitHub](velog-posts/2025-12-19-TIL%20-%20React%20Query%20%60select%60%20%EC%98%B5%EC%85%98.md)
 - 2025-12-18 [면접을 위한 CS 전공지식 노트](https://velog.io/@sunmins/%EB%A9%B4%EC%A0%91%EC%9D%84-%EC%9C%84%ED%95%9C-CS-%EC%A0%84%EA%B3%B5%EC%A7%80%EC%8B%9D-%EB%85%B8%ED%8A%B8) → [GitHub](velog-posts/2025-12-18-%EB%A9%B4%EC%A0%91%EC%9D%84%20%EC%9C%84%ED%95%9C%20CS%20%EC%A0%84%EA%B3%B5%EC%A7%80%EC%8B%9D%20%EB%85%B8%ED%8A%B8.md)
 - 2025-12-17 [react-i18next에서 `*`만 빨간색으로 표시하기](https://velog.io/@sunmins/react-i18next%EC%97%90%EC%84%9C-%EB%A7%8C-%EB%B9%A8%EA%B0%84%EC%83%89%EC%9C%BC%EB%A1%9C-%ED%91%9C%EC%8B%9C%ED%95%98%EA%B8%B0) → [GitHub](velog-posts/2025-12-17-react-i18next%EC%97%90%EC%84%9C%20%60-%60%EB%A7%8C%20%EB%B9%A8%EA%B0%84%EC%83%89%EC%9C%BC%EB%A1%9C%20%ED%91%9C%EC%8B%9C%ED%95%98%EA%B8%B0.md)
-- 2025-12-16 [[CS 기초] 컴퓨터는 켜지면 무슨 일이 벌어질까? (부팅 과정 & 메모리 구조)](https://velog.io/@sunmins/CS-%EA%B8%B0%EC%B4%88-%EC%BB%B4%ED%93%A8%ED%84%B0%EB%8A%94-%EC%BC%9C%EC%A7%80%EB%A9%B4-%EB%AC%B4%EC%8A%A8-%EC%9D%BC%EC%9D%B4-%EB%B2%8C%EC%96%B4%EC%A7%88%EA%B9%8C-%EB%B6%80%ED%8C%85-%EA%B3%BC%EC%A0%95-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EA%B5%AC%EC%A1%B0) → [GitHub](velog-posts/2025-12-16-%5BCS%20%EA%B8%B0%EC%B4%88%5D%20%EC%BB%B4%ED%93%A8%ED%84%B0%EB%8A%94%20%EC%BC%9C%EC%A7%80%EB%A9%B4%20%EB%AC%B4%EC%8A%A8%20%EC%9D%BC%EC%9D%B4%20%EB%B2%8C%EC%96%B4%EC%A7%88%EA%B9%8C-%20%28%EB%B6%80%ED%8C%85%20%EA%B3%BC%EC%A0%95%20%26%20%EB%A9%94%EB%AA%A8%EB%A6%AC%20%EA%B5%AC%EC%A1%B0%29.md)
 
 <!-- VELLOG_RECENT_POSTS:END -->
 
