@@ -15,7 +15,7 @@
 </ul>
 <p>대규모 폼, 검색 조건이 많은 화면에서 <strong>체감 성능 차이 큼</strong></p>
 <hr />
-<h3 id="uncontrolled-component">Uncontrolled Component</h3>
+<h4 id="uncontrolled-component">Uncontrolled Component</h4>
 <ul>
 <li>입력값의 <strong>source of truth는 DOM</strong></li>
 <li><code>ref</code>를 통해 필요할 때만 접근</li>
@@ -30,7 +30,7 @@
 <li>React는 값 변경에 관여하지 않음</li>
 </ul>
 <hr />
-<h3 id="controlled-component">Controlled Component</h3>
+<h4 id="controlled-component">Controlled Component</h4>
 <ul>
 <li>입력값의 <strong>source of truth는 React state</strong></li>
 <li><code>useState</code>로 값 직접 관리</li>
