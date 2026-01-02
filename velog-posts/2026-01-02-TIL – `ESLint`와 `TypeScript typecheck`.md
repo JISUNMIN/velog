@@ -110,7 +110,6 @@ is not assignable to type 'OptionGroupType[]'.
 <li>TypeScript: 타입 불일치, 매개변수 누락, 구조적 문제 검사</li>
 </ul>
 <hr />
-<h2 id="결론">결론</h2>
 <p>코드를 자동으로 검사할 수 있게 해주는 도구로는<br /><strong>ESLint</strong>와 <strong>TypeScript typecheck</strong>가 있다.</p>
 <p>처음에는 ESLint로 문제를 찾을 수 있을 거라 생각했지만,<br />이번 이슈의 핵심은 코드 규칙이 아니라 <strong>타입 불일치</strong>였다.</p>
 <ul>
