@@ -12,8 +12,8 @@
 <!-- VELLOG_POPULAR_POSTS:START -->
 ## Popular Velog Posts
 
-- 196 views · [상하좌우 자유로운 DnD를 원한다면? "pangea/dnd" → "dnd-kit" ](https://velog.io/@sunmins/Grid-레이아웃에서-완전한-Drag-Drop을-구현하는-방법-dnd-kit-적용기)
-- 109 views · [✨ React + Tailwind로 구현하는 3D 카드 인터랙션과 빛 반짝임 효과 (포켓몬 카드)](https://velog.io/@sunmins/마우스-움직임에-따라-카드에-3D-회전과-반짝이는-효과-주기-3yhyb3iq)
-- 101 views · [F12에서 API 응답시간 확인하는 법 + timeout 문제까지](https://velog.io/@sunmins/F12에서-API-응답시간-확인하는-법-timeout-문제까지)
+- 0 views · [TIL – `ESLint`와 `TypeScript typecheck`](https://velog.io/@sunmins/TIL-ESLint와-TypeScript-typecheck)
+- 0 views · [웹 개발 스킬을 한 단계 높여주는 프론트엔드 성능 최적화 가이드](https://velog.io/@sunmins/웹-개발-스킬을-한-단계-높여주는-프론트엔드-성능-최적화-가이드-poxhygb3)
+- 0 views · [TIL – i18n `namespace`와 `defaultNS`](https://velog.io/@sunmins/TIL-i18n-namespace와-defaultNS)
 
 <!-- VELLOG_POPULAR_POSTS:END -->
