@@ -137,9 +137,6 @@ def fetch_all_posts(session, headers, username):
 
 
 def fetch_post_views(session, headers, post_id):
-    """
-    GetStats 쿼리로 특정 글의 조회수(total) 가져오기
-    """
     payload = {
         "operationName": "GetStats",
         "variables": {"post_id": post_id},
@@ -153,10 +150,18 @@ def fetch_post_views(session, headers, post_id):
         """,
     }
 
-    data = post_graphql(session, headers, payload, retries=3)
-    stats = data.get("data", {}).get("getStats", None)
-    if not stats:
-        return 0
+    resp = session.post(GRAPHQL_URL, json=payload, headers=headers, timeout=15)
+    resp.raise_for_status()
+    data = resp.json()
+
+    # ✅ GraphQL은 HTTP 200이어도 errors가 올 수 있음
+    if data.get("errors"):
+        # 여기 찍히는 메시지가 "갑자기 안됨"의 진짜 원인
+        raise RuntimeError(f"GraphQL errors: {data['errors']}")
+
+    # ✅ data가 None인 경우 방어
+    data_block = data.get("data") or {}
+    stats = data_block.get("getStats") or {}
     return stats.get("total", 0) or 0
 
 
