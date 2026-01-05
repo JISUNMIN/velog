@@ -2,9 +2,9 @@
 
 import os
 import re
+import time
 import requests
 import git
-from dateutil import parser
 
 # -----------------------------
 # 설정
@@ -22,6 +22,39 @@ TOP_N = 3  # 인기글 개수
 
 
 # -----------------------------
+# 공통 GraphQL 요청 (재시도 + 에러 출력)
+# -----------------------------
+def post_graphql(session, headers, payload, retries=3):
+    last_err = None
+    for attempt in range(1, retries + 1):
+        try:
+            resp = session.post(GRAPHQL_URL, json=payload, headers=headers, timeout=15)
+
+            # 429/5xx 같은 경우 재시도
+            if resp.status_code in (429, 500, 502, 503, 504):
+                raise RuntimeError(f"HTTP {resp.status_code}: {resp.text[:200]}")
+
+            resp.raise_for_status()
+            data = resp.json()
+
+            # GraphQL 에러는 HTTP 200으로도 올 수 있음
+            if "errors" in data and data["errors"]:
+                raise RuntimeError(f"GraphQL errors: {data['errors']}")
+
+            return data
+
+        except Exception as e:
+            last_err = e
+            if attempt == retries:
+                break
+            wait = 2 * attempt
+            print(f"[Popular] GraphQL 요청 실패, {wait}s 후 재시도({attempt}/{retries}): {e}")
+            time.sleep(wait)
+
+    raise last_err
+
+
+# -----------------------------
 # Velog 인기글 조회 로직
 # -----------------------------
 def get_session_with_cookies():
@@ -33,9 +66,18 @@ def get_session_with_cookies():
         return None, None
 
     session = requests.Session()
+
+    # ✅ Cookie 헤더로 한 번에 넣는 것보다, session cookies로 세팅하는 게 안정적임
+    # (도메인/path 지정이 중요)
+    session.cookies.set("access_token", access_token, domain="v2.velog.io", path="/")
+    session.cookies.set("refresh_token", refresh_token, domain="v2.velog.io", path="/")
+
     headers = {
         "Content-Type": "application/json",
-        "Cookie": f"access_token={access_token}; refresh_token={refresh_token}",
+        # ✅ Origin/Referer/User-Agent가 없으면 막히거나 불안정한 경우가 있어서 추가
+        "Origin": "https://velog.io",
+        "Referer": "https://velog.io/",
+        "User-Agent": "Mozilla/5.0 (GitHub Actions) update_popular_posts",
     }
     return session, headers
 
@@ -82,9 +124,7 @@ def fetch_all_posts(session, headers, username):
             """,
         }
 
-        resp = session.post(GRAPHQL_URL, json=payload, headers=headers, timeout=15)
-        resp.raise_for_status()
-        data = resp.json()
+        data = post_graphql(session, headers, payload, retries=3)
 
         post_list = data.get("data", {}).get("posts", [])
         if not post_list:
@@ -113,10 +153,10 @@ def fetch_post_views(session, headers, post_id):
         """,
     }
 
-    resp = session.post(GRAPHQL_URL, json=payload, headers=headers, timeout=15)
-    resp.raise_for_status()
-    data = resp.json()
-    stats = data.get("data", {}).get("getStats", {})
+    data = post_graphql(session, headers, payload, retries=3)
+    stats = data.get("data", {}).get("getStats", None)
+    if not stats:
+        return 0
     return stats.get("total", 0) or 0
 
 
@@ -137,23 +177,26 @@ def fetch_popular_posts(username, top_n=3):
         post_id = p["id"]
         title = p["title"]
         slug = p["url_slug"]
-        released_at = p.get("released_at")
 
         print(f"[Popular] ({idx}/{len(posts)}) 조회수 조회 중: {title}")
         try:
             views = fetch_post_views(session, headers, post_id)
         except Exception as e:
-            print(f"[Popular] 조회수 조회 실패({title}): {e}")
+            # ✅ 실패 원인이 숨겨지지 않게 출력 (그래야 갑자기 안 될 때 바로 진단 가능)
+            print(f"[Popular] 조회수 조회 실패({title}, post_id={post_id}): {e}")
             views = 0
 
         posts_with_views.append(
             {
                 "title": title,
                 "url_slug": slug,
-                "released_at": released_at,
                 "views": views,
             }
         )
+
+    # ✅ views가 0인 글이 대부분이면 "최신만 나오는" 현상 발생 확률 매우 높음
+    zero_count = sum(1 for x in posts_with_views if x["views"] == 0)
+    print(f"[Popular] views=0 인 글: {zero_count}/{len(posts_with_views)}")
 
     # 조회수 기준 내림차순 정렬
     posts_with_views.sort(key=lambda x: x["views"], reverse=True)
@@ -162,7 +205,6 @@ def fetch_popular_posts(username, top_n=3):
     result = []
     for p in top_posts:
         url = f"https://velog.io/@{username}/{p['url_slug']}"
-        # released_at 은 안 써도 되지만, 필요하면 파싱해서 쓸 수 있음
         result.append(
             {
                 "title": p["title"],
@@ -178,9 +220,6 @@ def fetch_popular_posts(username, top_n=3):
 # README Popular 섹션 갱신
 # -----------------------------
 def build_popular_section(popular_posts):
-    """
-    인기글 섹션용 마크다운 문자열 생성
-    """
     lines = []
     lines.append("## Popular Velog Posts")
     lines.append("")
@@ -201,17 +240,14 @@ def update_readme(popular_posts):
     replacement = f"{POPULAR_START}\n{new_block}\n{POPULAR_END}"
 
     if POPULAR_START in old_content and POPULAR_END in old_content:
-        # 기존 섹션 교체
         pattern = re.compile(
             re.escape(POPULAR_START) + r".*?" + re.escape(POPULAR_END),
             re.DOTALL,
         )
         new_content = pattern.sub(replacement, old_content)
     else:
-        # 섹션이 없다면 README 끝에 추가
         if old_content and not old_content.endswith("\n"):
             old_content += "\n"
-        # Latest 섹션 바로 밑에 오도록 하기 위해 단순히 뒤에 붙임
         new_content = old_content + "\n" + replacement + "\n"
 
     if new_content == old_content:
@@ -228,6 +264,12 @@ def update_readme(popular_posts):
 def commit_changes():
     repo = git.Repo(REPO_PATH)
     repo.git.add(README_PATH)
+
+    # ✅ 변경 없는데 commit 시도하면 에러나므로 안전장치
+    if not repo.is_dirty(untracked_files=True):
+        print("[Popular] 변경 사항이 없어 커밋 생략.")
+        return
+
     repo.git.commit("-m", "Update README with popular Velog posts")
     print("[Popular] Git commit 완료.")
 
