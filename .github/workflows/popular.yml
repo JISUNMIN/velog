@@ -2,8 +2,6 @@ name: Update Popular Velog Posts
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 0 * * 0"   # 매주 일요일 09:00 (KST) 실행
 
 jobs:
   update_popular:
