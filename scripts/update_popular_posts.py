@@ -38,7 +38,7 @@ def post_graphql(session, headers, payload, retries=3):
             data = resp.json()
 
             # GraphQL 에러는 HTTP 200으로도 올 수 있음
-            if "errors" in data and data["errors"]:
+            if data.get("errors"):
                 raise RuntimeError(f"GraphQL errors: {data['errors']}")
 
             return data
@@ -67,17 +67,18 @@ def get_session_with_cookies():
 
     session = requests.Session()
 
-    # ✅ Cookie 헤더로 한 번에 넣는 것보다, session cookies로 세팅하는 게 안정적임
-    # (도메인/path 지정이 중요)
-    session.cookies.set("access_token", access_token, domain="v2.velog.io", path="/")
-    session.cookies.set("refresh_token", refresh_token, domain="v2.velog.io", path="/")
+    # ✅ 쿠키를 여러 도메인으로 세팅 (환경에 따라 domain이 달라서 이게 제일 안전)
+    for domain in ("v2.velog.io", "velog.io", ".velog.io"):
+        session.cookies.set("access_token", access_token, domain=domain, path="/")
+        session.cookies.set("refresh_token", refresh_token, domain=domain, path="/")
 
     headers = {
         "Content-Type": "application/json",
-        # ✅ Origin/Referer/User-Agent가 없으면 막히거나 불안정한 경우가 있어서 추가
         "Origin": "https://velog.io",
         "Referer": "https://velog.io/",
         "User-Agent": "Mozilla/5.0 (GitHub Actions) update_popular_posts",
+        # ✅ 혹시 session cookie가 안 먹는 환경이면 이 헤더로도 같이 보냄(백업)
+        "Cookie": f"access_token={access_token}; refresh_token={refresh_token}",
     }
     return session, headers
 
@@ -125,8 +126,9 @@ def fetch_all_posts(session, headers, username):
         }
 
         data = post_graphql(session, headers, payload, retries=3)
+        data_block = data.get("data") or {}
+        post_list = data_block.get("posts") or []
 
-        post_list = data.get("data", {}).get("posts", [])
         if not post_list:
             break
 
@@ -137,6 +139,9 @@ def fetch_all_posts(session, headers, username):
 
 
 def fetch_post_views(session, headers, post_id):
+    """
+    GetStats 쿼리로 특정 글의 조회수(total) 가져오기
+    """
     payload = {
         "operationName": "GetStats",
         "variables": {"post_id": post_id},
@@ -150,18 +155,13 @@ def fetch_post_views(session, headers, post_id):
         """,
     }
 
-    resp = session.post(GRAPHQL_URL, json=payload, headers=headers, timeout=15)
-    resp.raise_for_status()
-    data = resp.json()
+    data = post_graphql(session, headers, payload, retries=3)
 
-    # ✅ GraphQL은 HTTP 200이어도 errors가 올 수 있음
-    if data.get("errors"):
-        # 여기 찍히는 메시지가 "갑자기 안됨"의 진짜 원인
-        raise RuntimeError(f"GraphQL errors: {data['errors']}")
+    # ✅ data:null 케이스면 원문을 터뜨려서 "왜 null인지" 바로 보이게
+    if data.get("data") is None:
+        raise RuntimeError(f"GetStats returned data:null (post_id={post_id}) raw={data}")
 
-    # ✅ data가 None인 경우 방어
-    data_block = data.get("data") or {}
-    stats = data_block.get("getStats") or {}
+    stats = (data.get("data") or {}).get("getStats") or {}
     return stats.get("total", 0) or 0
 
 
@@ -187,7 +187,6 @@ def fetch_popular_posts(username, top_n=3):
         try:
             views = fetch_post_views(session, headers, post_id)
         except Exception as e:
-            # ✅ 실패 원인이 숨겨지지 않게 출력 (그래야 갑자기 안 될 때 바로 진단 가능)
             print(f"[Popular] 조회수 조회 실패({title}, post_id={post_id}): {e}")
             views = 0
 
@@ -199,11 +198,9 @@ def fetch_popular_posts(username, top_n=3):
             }
         )
 
-    # ✅ views가 0인 글이 대부분이면 "최신만 나오는" 현상 발생 확률 매우 높음
     zero_count = sum(1 for x in posts_with_views if x["views"] == 0)
     print(f"[Popular] views=0 인 글: {zero_count}/{len(posts_with_views)}")
 
-    # 조회수 기준 내림차순 정렬
     posts_with_views.sort(key=lambda x: x["views"], reverse=True)
     top_posts = posts_with_views[:top_n]
 
