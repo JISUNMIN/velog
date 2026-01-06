@@ -33,9 +33,10 @@ Pages 설정 화면에서 배포된 주소를 확인했습니다.</p>
 <h2 id="4-html-작성-환경-선택">4. HTML 작성 환경 선택</h2>
 <p>기본으로 생성된 mock layout을 제거한 뒤,<br />HTML 코드를 작성하기 위해 HTML Playground를 선택 합니다.</p>
 <p>HTML Playground를 사용하면<br />별도의 환경 설정 없이 코드를 바로 작성할 수 있고,<br />작성한 내용을 화면으로 확인할 수 있어 편리하게 개발 할 수 있습니다.</p>
-<p><img alt="" src="https://velog.velcdn.com/images/sunmins/post/c9d6454f-5ca2-4b74-bcd6-9520d7baa140/image.png" /></p>
+<p><img alt="" src="https://velog.velcdn.com/images/sunmins/post/c9615c8d-db54-456c-97ed-2801bbe64916/image.png" /></p>
 <p><img alt="" src="https://velog.velcdn.com/images/sunmins/post/ee25bd7a-be1f-4cf2-8045-d0a024be32cc/image.png" /></p>
-<p>처음에는 <strong>CodePen</strong>을 사용해 보았으나<br />개인적으로 불편함을 느껴<a href="https://playcode.io/html-template"> HTML Template</a>를 사용하여 구현해 보도록 하겠습니다.</p>
+<p>여러가지 Playground가 있으니 선택해서 사용하시면 됩니다.
+저는 <a href="https://playcode.io/html-template">PlayCode</a>를 사용하여 구현할 예정입니다.</p>
 <hr />
 <h2 id="마무리">마무리</h2>
 <p>이번 글에서는 GitHub Pages를 이용해<br />포트폴리오 페이지를 배포하기 위한 <strong>기본 준비 과정</strong>을 정리했습니다.</p>
