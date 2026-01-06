@@ -327,7 +327,8 @@ const handleDragEnd = (event: any) => {
 </DndContext>
 ```
 
-![](https://velog.velcdn.com/images/sunmins/post/e9b6d19d-8836-4cf4-bf1d-945d24619de1/image.png)
+![](https://velog.velcdn.com/images/sunmins/post/bd936779-3837-4b15-a5ad-611d26f6bb61/image.gif)
+
 
 
 ---
