@@ -1,5 +1,4 @@
-<p>서적을 읽던 중 GitHub Pages로 만든 포트폴리오 페이지가 너무 예뻐서 
-저도 한 번 만들어 보기로 했습니다.</p>
+<p>서적을 읽던 중 GitHub Pages로 만든 포트폴리오 페이지가 너무 눈에 띄어 저도 한 번 만들어 보기로 했습니다.</p>
 <p>GitHub Pages는 <strong>정적 사이트를 무료로 배포</strong>해 주는 서비스로,<br />개인 포트폴리오를 보여주기 좋은 환경을 제공합니다.</p>
 <p>그래서 GitHub Pages를 이용해<br />포트폴리오 페이지를 직접 만들어 보기로 했습니다.<br />이번글에서는 먼저 기본 설정부터 진행해 보겠습니다. 
 렛츠고 ~</p>
@@ -31,11 +30,11 @@ Pages 설정 화면에서 배포된 주소를 확인했습니다.</p>
 <p>정상적으로 배포된 것을 확인할 수 있었습니다.</p>
 <hr />
 <h2 id="4-html-작성-환경-선택">4. HTML 작성 환경 선택</h2>
-<p>기본으로 생성된 mock layout을 제거한 뒤,<br />HTML 코드를 작성하기 위해 HTML Playground를 선택 합니다.</p>
-<p>HTML Playground를 사용하면<br />별도의 환경 설정 없이 코드를 바로 작성할 수 있고,<br />작성한 내용을 화면으로 확인할 수 있어 편리하게 개발 할 수 있습니다.</p>
+<p>기본으로 생성된 mock layout을 제거한 뒤,<br />HTML 코드를 작성하기 위해 online code editor를 선택 합니다.</p>
+<p>online code editor를 사용하면<br />별도의 환경 설정 없이 코드를 바로 작성할 수 있고,<br />작성한 내용을 화면으로 확인할 수 있어 편리하게 개발 할 수 있습니다.</p>
 <p><img alt="" src="https://velog.velcdn.com/images/sunmins/post/c9615c8d-db54-456c-97ed-2801bbe64916/image.png" /></p>
 <p><img alt="" src="https://velog.velcdn.com/images/sunmins/post/ee25bd7a-be1f-4cf2-8045-d0a024be32cc/image.png" /></p>
-<p>여러가지 Playground가 있으니 선택해서 사용하시면 됩니다.
+<p>여러종류가 있으니 선택해서 사용하시면 됩니다.
 저는 <a href="https://playcode.io/html-template">PlayCode</a>를 사용하여 구현할 예정입니다.</p>
 <hr />
 <h2 id="마무리">마무리</h2>
