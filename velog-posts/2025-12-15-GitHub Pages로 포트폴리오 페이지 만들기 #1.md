@@ -39,4 +39,4 @@ Pages 설정 화면에서 배포된 주소를 확인했습니다.</p>
 <hr />
 <h2 id="마무리">마무리</h2>
 <p>이번 글에서는 GitHub Pages를 이용해<br />포트폴리오 페이지를 배포하기 위한 <strong>기본 준비 과정</strong>을 정리했습니다.</p>
-<p>다음 글에서는 HTML과 CSS를 이용해<br /><strong>실제 포트폴리오 페이지를 만들어 보겠습니다.</strong></p>
+<p><a href="https://velog.io/@sunmins/GitHub-Pages%EB%A1%9C-%ED%8F%AC%ED%8A%B8%ED%8F%B4%EB%A6%AC%EC%98%A4-%ED%8E%98%EC%9D%B4%EC%A7%80-%EB%A7%8C%EB%93%A4%EA%B8%B0-2">다음 글</a>에서는 HTML과 CSS를 이용해<br /><strong>실제 포트폴리오 페이지를 만들어 보겠습니다.</strong></p>
